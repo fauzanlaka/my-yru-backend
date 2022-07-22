@@ -72,10 +72,19 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $login       = $this->findUsername();
-        $credentials = $request->validate([
-            $login     => 'required|string',
+        $rules = [
+            $login => 'required|string',
             'password' => 'required|string',
-        ]);
+        ];
+        $messages = [
+            $login.'.required' => 'กรุณากรอกชื่อผู้ใช้ หรือ อีเมล',
+            'password.required' => 'กรุณากรอกรหัสผ่าน',
+        ];
+        $request->validate($rules, $messages);
+        // $credentials = $request->validate([
+        //     $login     => 'required|string',
+        //     'password' => 'required|string',
+        // ]);
 
         $user = User::where($login, $request->username)->first();
         if(!$user){
@@ -87,10 +96,11 @@ class AuthController extends Controller
                 'password' => 'รหัสผ่านไม่ถูกต้อง'
             ]);
         }else{
-            Auth::attempt($credentials);  
+            Auth::attempt([$login => $request->$login, 'password' => $request->password]);  
             return response([
                 'messages' => 'loged in',
                 'passkey'  => 'eyJpdiI6IlhqeWNCZjF3MWhJenRNY0pOcE1rMEE9PS',
+                // 'username' => $request->$login,
             ]); 
         }
     }
