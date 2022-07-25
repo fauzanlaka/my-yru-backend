@@ -26,5 +26,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('users', [UserController::class, 'index']);
     Route::patch('users/{id}', [UserController::class, 'update']);
+    Route::post('userDelete', [UserController::class, 'delete']);
     Route::get('userSearch', [UserController::class, 'search']);
+
 });

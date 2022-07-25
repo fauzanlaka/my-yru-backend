@@ -6,6 +6,7 @@ use Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -25,7 +26,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = User::orderBy('id')->orderBy('id', 'DESC')->paginate(10);
+        $id = auth()->user()->id;
+        $users = User::where('id', '!=', $id)->orderBy('id')->orderBy('id', 'DESC')->paginate(10);
         return response([
             'data' => $users,
         ]);
@@ -138,6 +140,31 @@ class UserController extends Controller
             ->paginate(10);
         return response([
             'data' => $users,
+        ]);
+    }
+
+    public function delete(Request $request)
+    {
+        $rules = [
+            'confirming_password' => 'required'
+        ];
+        $messages = [
+            'confirming_password.required' => 'กรุณากรอกรหัสผ่าน'
+        ];
+        $request->validate($rules, $messages);
+        $hasshedPassword = auth()->user()->getAuthPassword();
+        if(Hash::check($request->confirming_password, $hasshedPassword)){
+            $user = User::find($request->user_id);
+            $user->delete();
+        }else{
+            throw ValidationException::withMessages([
+                'confirming_password' => 'รหัสผ่านไม่ถูกต้อง'
+            ]);
+        }
+        return response([
+            'message' => 'deleted',
+            'response' => $request->all(),
+            'hashedPassword' => $hasshedPassword,
         ]);
     }
 }
