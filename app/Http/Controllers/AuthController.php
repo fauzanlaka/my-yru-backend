@@ -71,6 +71,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // sleep(1);
         $login       = $this->findUsername();
         $rules = [
             $login => 'required|string',
@@ -107,6 +108,7 @@ class AuthController extends Controller
 
     public function logout()
     {
+        // sleep(1);
         Auth::logout();
 
         return response([

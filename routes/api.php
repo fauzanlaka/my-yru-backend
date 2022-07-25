@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use PharIo\Manifest\AuthorCollection;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 
@@ -25,5 +24,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function(){
-    Route::get('user', [UserController::class, 'user']);
+    Route::get('users', [UserController::class, 'index']);
+    Route::patch('users/{id}', [UserController::class, 'update']);
+    Route::get('userSearch', [UserController::class, 'search']);
 });
