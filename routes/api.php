@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EquipmentController;
 
@@ -41,4 +42,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('equipment', [EquipmentController::class, 'store']);
     Route::patch('equipment/{id}', [EquipmentController::class, 'update']);
     Route::post('equipmentDelete', [EquipmentController::class, 'delete']);
+
+    //borrow
+    Route::post('borrow', [BorrowController::class, 'store']);
 });
